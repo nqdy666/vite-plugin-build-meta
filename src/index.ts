@@ -5,13 +5,16 @@ import { getGitHash } from './utils'
 
 export interface MetaDataItem {
   name: string
-  content?: string
+  /**
+   * meta 标签的 content 属性，支持字符串或函数（函数返回值作为 content）
+   */
+  content?: string | (() => string)
   /**
    * 为 true 时自动将 content 设为当前 git commit hash
    * @default false
    */
   commitGitHash?: boolean
-  [key: string]: string | boolean | undefined
+  [key: string]: string | boolean | (() => string) | undefined
 }
 
 export interface VitePluginBuildMetaOptions {
@@ -53,9 +56,8 @@ function resolveMetaData(metaData: MetaDataItem[]): Record<string, string>[] {
     const { commitGitHash, ...rest } = item
     const attrs: Record<string, string> = {}
     for (const [k, v] of Object.entries(rest)) {
-      if (v !== undefined) {
-        attrs[k] = String(v)
-      }
+      if (v === undefined) continue
+      attrs[k] = typeof v === 'function' ? v() : String(v)
     }
     if (commitGitHash && !attrs.content) {
       attrs.content = getGitHash()
