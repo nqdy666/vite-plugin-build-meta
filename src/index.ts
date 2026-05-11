@@ -1,6 +1,6 @@
 import type { HtmlTagDescriptor, Plugin } from 'vite'
-import { writeFileSync } from 'node:fs'
-import { resolve } from 'node:path'
+import { mkdirSync, writeFileSync } from 'node:fs'
+import { dirname, resolve } from 'node:path'
 import { getGitHash } from './utils'
 
 export interface MetaDataItem {
@@ -97,6 +97,7 @@ function VitePluginBuildMeta(options: VitePluginBuildMetaOptions = {}): Plugin {
 
       if (writeToFile && metaFilePath) {
         const outPath = resolve(root, metaFilePath)
+        mkdirSync(dirname(outPath), { recursive: true })
         writeFileSync(outPath, JSON.stringify(resolved, null, 2), 'utf-8')
         if (log) {
           console.log(`\n[vite-plugin-build-meta] metadata written to ${outPath}`)
