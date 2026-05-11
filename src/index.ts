@@ -1,5 +1,10 @@
-import type { Plugin } from 'vite'
-import dayjs from 'dayjs'
+import type { HtmlTagDescriptor, Plugin } from 'vite'
+
+export interface MetaDataItem {
+  name: string
+  content: string
+  [key: string]: string
+}
 
 export interface VitePluginBuildMetaOptions {
   /**
@@ -8,12 +13,14 @@ export interface VitePluginBuildMetaOptions {
    */
   enable?: boolean
   /**
-   * 是否启用
+   * 是否启用日志
    * @default false
    */
   log?: boolean
-  name?: string
-  format?: string | ((date: Date) => string)
+  /**
+   * meta 标签数据数组
+   */
+  metaData?: MetaDataItem[]
 }
 
 let i = 0
@@ -22,41 +29,29 @@ function VitePluginBuildMeta(options: VitePluginBuildMetaOptions = {}): Plugin {
   const {
     enable = true,
     log = false,
-    name = 'build-timestamp',
-    format,
+    metaData = [],
   } = options
 
   return {
     name: `vite-plugin-build-meta:${i++}`,
     apply: 'build',
     transformIndexHtml(html) {
-      if (!enable) {
+      if (!enable || metaData.length === 0) {
         return html
       }
-      let timestamp: string = new Date().getTime().toString()
-      if (typeof format === 'function') {
-        timestamp = format(new Date())
-      }
-      else if (typeof format === 'string') {
-        timestamp = dayjs().format(format)
-      }
 
-      if (log) {
-        console.log(`\n${name}: ${timestamp}`)
-      }
-      return {
-        html,
-        tags: [
-          {
-            tag: 'meta',
-            attrs: {
-              name,
-              content: timestamp,
-            },
-            injectTo: 'head',
-          },
-        ],
-      }
+      const tags: HtmlTagDescriptor[] = metaData.map((item) => {
+        if (log) {
+          console.log(`\n[vite-plugin-build-meta] <meta ${Object.entries(item).map(([k, v]) => `${k}="${v}"`).join(' ')}>`)
+        }
+        return {
+          tag: 'meta',
+          attrs: { ...item },
+          injectTo: 'head',
+        }
+      })
+
+      return { html, tags }
     },
   }
 }

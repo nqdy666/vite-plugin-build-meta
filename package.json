@@ -3,7 +3,7 @@
   "type": "module",
   "version": "1.0.1",
   "packageManager": "pnpm@9.14.2",
-  "description": "Generate a meta tag with build metadata in the head of the HTML during the build process",
+  "description": "Generate meta tags with custom build metadata in the head of the HTML during the build process",
   "author": "nianqin",
   "license": "MIT",
   "homepage": "https://github.com/nqdy666/vite-plugin-build-meta",
@@ -38,9 +38,7 @@
   "peerDependencies": {
     "vite": "^6.0.0"
   },
-  "dependencies": {
-    "dayjs": "^1.11.13"
-  },
+
   "devDependencies": {
     "@antfu/eslint-config": "^3.10.0",
     "@antfu/ni": "^0.23.1",

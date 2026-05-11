@@ -1,6 +1,6 @@
 <h2 align='center'><samp>vite-plugin-build-meta</samp></h2>
 
-<p align='center'>Generate a meta tag with build metadata in the head of the HTML during the build process</p>
+<p align='center'>Generate meta tags with custom build metadata in the head of the HTML during the build process</p>
 
 <p align='center'>
 <a href='https://www.npmjs.com/package/vite-plugin-build-meta'>
@@ -26,7 +26,12 @@ import VitePluginBuildMeta from 'vite-plugin-build-meta'
 
 export default {
   plugins: [
-    VitePluginBuildMeta()
+    VitePluginBuildMeta({
+      metaData: [
+        { name: 'build-version', content: '1.0.0' },
+        { name: 'build-time', content: new Date().toISOString() },
+      ],
+    })
   ],
 }
 ```
