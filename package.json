@@ -1,7 +1,7 @@
 {
   "name": "vite-plugin-build-meta",
   "type": "module",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "packageManager": "pnpm@9.14.2",
   "description": "Generate meta tags with custom build metadata in the head of the HTML during the build process",
   "author": "nianqin",
