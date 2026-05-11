@@ -18,6 +18,11 @@ export interface VitePluginBuildMetaOptions {
    */
   log?: boolean
   /**
+   * 是否注入到 head 的 meta 标签中
+   * @default true
+   */
+  injectToHead?: boolean
+  /**
    * meta 标签数据数组
    */
   metaData?: MetaDataItem[]
@@ -29,6 +34,7 @@ function VitePluginBuildMeta(options: VitePluginBuildMetaOptions = {}): Plugin {
   const {
     enable = true,
     log = false,
+    injectToHead = true,
     metaData = [],
   } = options
 
@@ -36,7 +42,7 @@ function VitePluginBuildMeta(options: VitePluginBuildMetaOptions = {}): Plugin {
     name: `vite-plugin-build-meta:${i++}`,
     apply: 'build',
     transformIndexHtml(html) {
-      if (!enable || metaData.length === 0) {
+      if (!enable || metaData.length === 0 || !injectToHead) {
         return html
       }
 
