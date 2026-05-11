@@ -57,7 +57,7 @@ function resolveMetaData(metaData: MetaDataItem[]): Record<string, string>[] {
         attrs[k] = String(v)
       }
     }
-    if (commitGitHash) {
+    if (commitGitHash && !attrs.content) {
       attrs.content = getGitHash()
     }
     return attrs
